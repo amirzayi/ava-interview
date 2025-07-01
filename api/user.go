@@ -17,7 +17,9 @@ func (a *Router) ListUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jsonutil.Encode(w, http.StatusOK, ModelsToDTOs(users))
+	jsonutil.Encode(w, http.StatusOK, map[string]any{
+		"data": ModelsToDTOs(users),
+	})
 }
 
 func (a *Router) CreateUser(w http.ResponseWriter, r *http.Request) {

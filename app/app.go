@@ -10,6 +10,9 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/golang-migrate/migrate/v4/database/sqlite3"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/amirzayi/ava-interview/api"
@@ -26,7 +29,19 @@ func Start(ctx context.Context, dbPath, httpAddress string) error {
 	if err != nil {
 		return fmt.Errorf("failed to ping database %v", err)
 	}
-	log.Print("db ok")
+
+	driver, err := sqlite3.WithInstance(db, &sqlite3.Config{})
+	if err != nil {
+		return fmt.Errorf("failed to run driver instance: %v", err)
+	}
+	migrator, err := migrate.NewWithDatabaseInstance("file://../database/migration", "sqlite3", driver)
+	if err != nil {
+		return fmt.Errorf("failed to create migration: %v", err)
+	}
+	if err = migrator.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		return fmt.Errorf("failed to do migration: %v", err)
+	}
+
 	// Initialize the service(business logics)
 	service := service.NewService(db)
 

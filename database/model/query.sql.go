@@ -35,7 +35,6 @@ DELETE FROM
     user
 WHERE
     ID = ?
-LIMIT 1
 `
 
 func (q *Queries) DeleteUserByID(ctx context.Context, id int64) error {

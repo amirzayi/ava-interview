@@ -4,12 +4,12 @@ import (
 	"context"
 	"log"
 	"testing"
+	"time"
 
 	"github.com/amirzayi/ava-interview/app"
 )
 
 func TestMain(m *testing.M) {
-	log.Print("setting up")
 
 	ctx, cancel := context.WithCancel(context.Background())
 
@@ -20,6 +20,6 @@ func TestMain(m *testing.M) {
 			log.Fatal(err)
 		}
 	}()
-
+	time.Sleep(500 * time.Millisecond)
 	m.Run()
 }

@@ -25,5 +25,4 @@ FROM
 DELETE FROM
     user
 WHERE
-    ID = ?
-LIMIT 1;
+    ID = ?;
