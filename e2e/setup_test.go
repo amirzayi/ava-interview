@@ -20,6 +20,7 @@ func TestMain(m *testing.M) {
 			log.Fatal(err)
 		}
 	}()
+	// wait a while for the server to start
 	time.Sleep(500 * time.Millisecond)
 	m.Run()
 }
