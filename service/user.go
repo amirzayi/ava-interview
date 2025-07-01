@@ -18,6 +18,7 @@ func NewService(db *sql.DB) *Service {
 		db: model.New(db),
 	}
 }
+
 func (s *Service) ListUsers(ctx context.Context) ([]model.User, error) {
 	users, err := s.db.ListUsers(ctx)
 	if err != nil {
