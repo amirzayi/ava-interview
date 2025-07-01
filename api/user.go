@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/amirzayi/ava-interview/database/model"
 	"github.com/amirzayi/ava-interview/pkg/jsonutil"
 )
 
@@ -18,23 +17,22 @@ func (a *Router) ListUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jsonutil.Encode(w, http.StatusOK, users)
+	jsonutil.Encode(w, http.StatusOK, ModelsToDTOs(users))
 }
 
 func (a *Router) CreateUser(w http.ResponseWriter, r *http.Request) {
-	req, err := jsonutil.Decode[model.CreateUserParams](r)
+	req, err := jsonutil.Decode[User](r)
 	if err != nil {
 		jsonutil.Encode(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	_, err = a.Service.CreateUser(r.Context(), req)
+	user, err := a.Service.CreateUser(r.Context(), req.CreateParam())
 	if err != nil {
 		jsonutil.Encode(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-
-	w.WriteHeader(http.StatusCreated)
+	jsonutil.Encode(w, http.StatusCreated, ModelToDTO(user))
 }
 
 func (a *Router) GetUserByID(w http.ResponseWriter, r *http.Request) {
@@ -51,7 +49,7 @@ func (a *Router) GetUserByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jsonutil.Encode(w, http.StatusOK, user)
+	jsonutil.Encode(w, http.StatusOK, ModelToDTO(user))
 }
 
 func (a *Router) DeleteUserByID(w http.ResponseWriter, r *http.Request) {
